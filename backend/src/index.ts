@@ -6,6 +6,7 @@ import recyclerRoutes from './routes/recyclerRoutes';
 import pickupRoutes from './routes/pickupRoutes';
 import reviewRoutes from './routes/reviewRoutes';
 import impactRoutes from './routes/impactRoutes';
+import rewardsRoutes from './routes/rewardsRoutes';
 
 // Load environment variables
 dotenv.config();
@@ -40,6 +41,8 @@ app.use('/api/reviews', reviewRoutes);
 console.log('Review routes registered');
 app.use('/api/impact', impactRoutes);
 console.log('Impact routes registered');
+app.use('/api/rewards', rewardsRoutes);
+console.log('Rewards routes registered');
 
 // 404 handler
 app.use((_req: Request, res: Response) => {

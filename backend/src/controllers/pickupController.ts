@@ -221,3 +221,67 @@ export const cancelPickup = async (req: AuthRequest, res: Response): Promise<voi
     res.status(500).json({ error: 'Internal server error' });
   }
 };
+
+const completePickupSchema = z.object({
+  actualWeightKg: z.number().positive(),
+  complianceCertificateUrl: z.string().url().optional(),
+});
+
+export const completePickup = async (req: AuthRequest, res: Response): Promise<void> => {
+  try {
+    if (!req.user) {
+      res.status(401).json({ error: 'Unauthorized' });
+      return;
+    }
+
+    const { id } = req.params;
+    const data = completePickupSchema.parse(req.body);
+
+    const pickup = await prisma.pickupRequest.findUnique({
+      where: { id: id as string },
+    });
+
+    if (!pickup) {
+      res.status(404).json({ error: 'Pickup request not found' });
+      return;
+    }
+
+    // Calculate impact metrics
+    const impactCO2SavedKg = data.actualWeightKg * 1.5; // Simplified calculation
+
+    const updatedPickup = await prisma.pickupRequest.update({
+      where: { id: id as string },
+      data: {
+        status: 'COMPLETED',
+        actualWeightKg: data.actualWeightKg,
+        complianceCertificateUrl: data.complianceCertificateUrl,
+        impactCO2SavedKg,
+        completedAt: new Date(),
+        statusHistory: [
+          ...(pickup.statusHistory as any[]),
+          {
+            status: 'COMPLETED',
+            timestamp: new Date().toISOString(),
+            note: 'Pickup completed successfully',
+          },
+        ],
+      },
+    });
+
+    // Award rewards to user
+    const { awardPickupReward } = await import('./rewardsController');
+    await awardPickupReward(pickup.userId, data.actualWeightKg);
+
+    res.status(200).json({
+      message: 'Pickup completed successfully',
+      pickup: updatedPickup,
+    });
+  } catch (error) {
+    if (error instanceof z.ZodError) {
+      res.status(400).json({ error: 'Validation error', details: error.issues });
+      return;
+    }
+    console.error('Complete pickup error:', error);
+    res.status(500).json({ error: 'Internal server error' });
+  }
+};
