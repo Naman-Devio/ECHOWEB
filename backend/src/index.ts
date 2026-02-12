@@ -47,9 +47,21 @@ app.use((err: any, _req: Request, res: Response, _next: any) => {
 });
 
 // Start server
-app.listen(PORT, () => {
+app.listen(PORT, async () => {
   console.log(`Server is running on port ${PORT}`);
   console.log(`Environment: ${process.env.NODE_ENV || 'development'}`);
+  
+  // Run seed on first startup if needed
+  if (process.env.NODE_ENV === 'production') {
+    try {
+      const { execSync } = require('child_process');
+      console.log('Running database seed...');
+      execSync('npx prisma db seed', { stdio: 'inherit' });
+      console.log('Database seeded successfully');
+    } catch (error) {
+      console.log('Seed already run or failed:', error);
+    }
+  }
 });
 
 export default app;
