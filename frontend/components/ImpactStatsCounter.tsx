@@ -48,7 +48,11 @@ function AnimatedCounter({
       setCount(newCount);
 
       // Play tick sound every 10% of progress
-      if (playTick && newCount > lastTickRef.current && newCount % Math.max(1, Math.floor(value / 20)) === 0) {
+      if (
+        playTick &&
+        newCount > lastTickRef.current &&
+        newCount % Math.max(1, Math.floor(value / 20)) === 0
+      ) {
         playTick();
         lastTickRef.current = newCount;
       }

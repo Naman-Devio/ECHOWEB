@@ -28,7 +28,7 @@ export default function GuidelinesPage() {
       title: 'Legal Requirements',
       icon: BookOpen,
       content:
-        'India\'s E-Waste Management Rules 2016 mandate proper collection and recycling. Producers must ensure collection and recycling of their products.',
+        "India's E-Waste Management Rules 2016 mandate proper collection and recycling. Producers must ensure collection and recycling of their products.",
     },
   ];
 
