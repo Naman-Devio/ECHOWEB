@@ -11,6 +11,13 @@ interface ScratchCardProps {
   onScratched: (reward: { type: string; value: number }) => void;
 }
 
+interface LocalCard {
+  id: string;
+  rewardType: string;
+  rewardValue: number;
+  status: string;
+}
+
 export default function ScratchCard({ cardId, onScratched }: ScratchCardProps) {
   const canvasRef = useRef<HTMLCanvasElement>(null);
   const [isScratching, setIsScratching] = useState(false);
@@ -30,7 +37,7 @@ export default function ScratchCard({ cardId, onScratched }: ScratchCardProps) {
       if (isLocalCard) {
         const localCards = JSON.parse(localStorage.getItem('scratchCards') || '[]');
         console.log('Local cards:', localCards);
-        const card = localCards.find((c: any) => c.id === cardId);
+        const card = localCards.find((c: LocalCard) => c.id === cardId);
         console.log('Found card:', card);
         if (card) {
           const rewardData = { type: card.rewardType, value: card.rewardValue };
@@ -131,7 +138,7 @@ export default function ScratchCard({ cardId, onScratched }: ScratchCardProps) {
       console.log('Processing localStorage card');
       // Update card status in localStorage
       const localCards = JSON.parse(localStorage.getItem('scratchCards') || '[]');
-      const cardIndex = localCards.findIndex((c: any) => c.id === cardId);
+      const cardIndex = localCards.findIndex((c: LocalCard) => c.id === cardId);
       if (cardIndex !== -1) {
         localCards[cardIndex].status = 'SCRATCHED';
         localStorage.setItem('scratchCards', JSON.stringify(localCards));

@@ -2,9 +2,26 @@
 
 import { useEffect, useState } from 'react';
 
+interface GuestUser {
+  id: string;
+  email: string;
+  name: string;
+  tier: string;
+  points: number;
+  cashback: number;
+  isGuest: boolean;
+}
+
+interface ScratchCardData {
+  id: string;
+  rewardType: string;
+  rewardValue: number;
+  status: string;
+}
+
 export default function DebugRewardsPage() {
-  const [guestUser, setGuestUser] = useState<any>(null);
-  const [scratchCards, setScratchCards] = useState<any[]>([]);
+  const [guestUser, setGuestUser] = useState<GuestUser | null>(null);
+  const [scratchCards, setScratchCards] = useState<ScratchCardData[]>([]);
 
   useEffect(() => {
     loadData();
