@@ -29,11 +29,17 @@ app.get('/health', (_req: Request, res: Response) => {
 });
 
 // API Routes
+console.log('Registering routes...');
 app.use('/api/auth', authRoutes);
+console.log('Auth routes registered');
 app.use('/api/recyclers', recyclerRoutes);
+console.log('Recycler routes registered');
 app.use('/api/pickups', pickupRoutes);
+console.log('Pickup routes registered');
 app.use('/api/reviews', reviewRoutes);
+console.log('Review routes registered');
 app.use('/api/impact', impactRoutes);
+console.log('Impact routes registered');
 
 // 404 handler
 app.use((_req: Request, res: Response) => {
