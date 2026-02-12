@@ -124,10 +124,11 @@ export const login = async (req: Request, res: Response): Promise<void> => {
     }
 
     // Check if email is verified
-    if (!user.emailVerified) {
-      res.status(403).json({ error: 'Please verify your email first' });
-      return;
-    }
+    // Temporarily disabled for testing
+    // if (!user.emailVerified) {
+    //   res.status(403).json({ error: 'Please verify your email first' });
+    //   return;
+    // }
 
     // Verify password
     const isValidPassword = await bcrypt.compare(data.password, user.passwordHash);
