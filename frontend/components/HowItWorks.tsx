@@ -26,8 +26,8 @@ const steps = [
   },
   {
     icon: Award,
-    title: 'Track Impact',
-    description: 'Monitor your environmental contribution in real-time',
+    title: 'Get Rewards',
+    description: 'Earn points, cashback, and scratch cards for recycling',
     step: '04',
   },
 ];

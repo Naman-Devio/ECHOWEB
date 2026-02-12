@@ -24,18 +24,22 @@ function AnimatedCounter({
   value,
   duration = 2000,
   playTick,
+  isVisible,
 }: {
   value: number;
   duration?: number;
   playTick?: () => void;
+  isVisible?: boolean;
 }) {
   const [count, setCount] = useState(0);
   const ref = useRef(null);
   const isInView = useInView(ref, { once: true });
   const lastTickRef = useRef(0);
+  const hasStartedRef = useRef(false);
 
   useEffect(() => {
-    if (!isInView) return;
+    if (!isInView || hasStartedRef.current) return;
+    hasStartedRef.current = true;
 
     let startTime: number;
     let animationFrame: number;
@@ -47,9 +51,10 @@ function AnimatedCounter({
 
       setCount(newCount);
 
-      // Play tick sound every 10% of progress
+      // Only play tick sound if component is visible AND in view
       if (
         playTick &&
+        isVisible &&
         newCount > lastTickRef.current &&
         newCount % Math.max(1, Math.floor(value / 20)) === 0
       ) {
@@ -64,8 +69,10 @@ function AnimatedCounter({
 
     animationFrame = requestAnimationFrame(animate);
 
-    return () => cancelAnimationFrame(animationFrame);
-  }, [value, duration, isInView, playTick]);
+    return () => {
+      cancelAnimationFrame(animationFrame);
+    };
+  }, [value, duration, isInView, playTick, isVisible]);
 
   return <span ref={ref}>{count.toLocaleString()}</span>;
 }
@@ -78,9 +85,11 @@ export default function ImpactStatsCounter({
   const totalMaterials =
     materialsRecovered.copperKg + materialsRecovered.aluminumKg + materialsRecovered.plasticKg;
   const { playTick, playClick, playHover } = useSoundEffects();
+  const sectionRef = useRef(null);
+  const isVisible = useInView(sectionRef, { amount: 0.3 }); // Only play sounds when 30% of section is visible
 
   return (
-    <section className="py-20 bg-gradient-to-br from-neutral-900 via-primary-900 to-secondary-900 text-white relative overflow-hidden">
+    <section ref={sectionRef} className="py-20 bg-gradient-to-br from-neutral-900 via-primary-900 to-secondary-900 text-white relative overflow-hidden">
       {/* Background pattern */}
       <div className="absolute inset-0 opacity-10">
         <div
@@ -125,7 +134,7 @@ export default function ImpactStatsCounter({
               <TrendingUp className="w-6 h-6 text-green-400" />
             </div>
             <div className="text-5xl font-bold mb-2">
-              <AnimatedCounter value={Math.floor(eWasteDiverted / 1000)} playTick={playTick} />
+              <AnimatedCounter value={Math.floor(eWasteDiverted / 1000)} playTick={playTick} isVisible={isVisible} />
               <span className="text-3xl ml-1">Tons</span>
             </div>
             <p className="text-neutral-300 text-lg">E-Waste Diverted from Landfills</p>
@@ -152,7 +161,7 @@ export default function ImpactStatsCounter({
               <TrendingUp className="w-6 h-6 text-green-400" />
             </div>
             <div className="text-5xl font-bold mb-2">
-              <AnimatedCounter value={Math.floor(co2Saved / 1000)} playTick={playTick} />
+              <AnimatedCounter value={Math.floor(co2Saved / 1000)} playTick={playTick} isVisible={isVisible} />
               <span className="text-3xl ml-1">Tons</span>
             </div>
             <p className="text-neutral-300 text-lg">CO₂ Emissions Prevented</p>
@@ -179,7 +188,7 @@ export default function ImpactStatsCounter({
               <TrendingUp className="w-6 h-6 text-green-400" />
             </div>
             <div className="text-5xl font-bold mb-2">
-              <AnimatedCounter value={Math.floor(totalMaterials)} playTick={playTick} />
+              <AnimatedCounter value={Math.floor(totalMaterials)} playTick={playTick} isVisible={isVisible} />
               <span className="text-3xl ml-1">Kg</span>
             </div>
             <p className="text-neutral-300 text-lg">Precious Materials Recovered</p>
@@ -242,7 +251,7 @@ export default function ImpactStatsCounter({
             ].map((material, index) => (
               <div key={index} className="text-center">
                 <div className={`text-2xl font-bold ${material.color}`}>
-                  <AnimatedCounter value={Math.floor(material.value)} />
+                  <AnimatedCounter value={Math.floor(material.value)} isVisible={isVisible} />
                   <span className="text-sm ml-1">{material.unit}</span>
                 </div>
                 <p className="text-sm text-neutral-400 mt-1">{material.label}</p>

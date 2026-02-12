@@ -79,7 +79,7 @@ export default function RecyclersPage() {
                 placeholder="Enter your location..."
                 value={searchQuery}
                 onChange={(e) => setSearchQuery(e.target.value)}
-                className="w-full px-6 py-4 border-2 border-neutral-200 rounded-xl focus:border-primary-500 focus:outline-none text-lg"
+                className="w-full px-6 py-4 border-2 border-neutral-200 rounded-xl focus:border-primary-500 focus:outline-none text-lg text-gray-900 bg-white"
               />
             </div>
             <button

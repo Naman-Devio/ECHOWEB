@@ -19,9 +19,28 @@ export default function SchedulePickupPage() {
   });
   const { playClick, playSuccess } = useSoundEffects();
 
-  const handleSubmit = (e: React.FormEvent) => {
+  const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
     playSuccess();
+    
+    // Create a scratch card with fixed demo reward (50 points)
+    try {
+      // Store demo card in localStorage with fixed reward
+      const existingCards = JSON.parse(localStorage.getItem('scratchCards') || '[]');
+      const newCard = {
+        id: Date.now().toString(),
+        rewardType: 'POINTS',
+        rewardValue: 50, // Fixed demo amount
+        status: 'AVAILABLE',
+        createdAt: new Date().toISOString(),
+      };
+      existingCards.push(newCard);
+      localStorage.setItem('scratchCards', JSON.stringify(existingCards));
+      console.log('Demo scratch card created with 50 points');
+    } catch (error) {
+      console.error('Error creating scratch card:', error);
+    }
+    
     setStep(4); // Success step
   };
 
@@ -94,7 +113,7 @@ export default function SchedulePickupPage() {
                       required
                       value={formData.name}
                       onChange={(e) => setFormData({ ...formData, name: e.target.value })}
-                      className="w-full px-4 py-3 border-2 border-neutral-200 rounded-xl focus:border-primary-500 focus:outline-none"
+                      className="w-full px-4 py-3 border-2 border-neutral-200 rounded-xl focus:border-primary-500 focus:outline-none text-gray-900 bg-white"
                       placeholder="John Doe"
                     />
                   </div>
@@ -108,7 +127,7 @@ export default function SchedulePickupPage() {
                       required
                       value={formData.phone}
                       onChange={(e) => setFormData({ ...formData, phone: e.target.value })}
-                      className="w-full px-4 py-3 border-2 border-neutral-200 rounded-xl focus:border-primary-500 focus:outline-none"
+                      className="w-full px-4 py-3 border-2 border-neutral-200 rounded-xl focus:border-primary-500 focus:outline-none text-gray-900 bg-white"
                       placeholder="+91 98765 43210"
                     />
                   </div>
@@ -122,7 +141,7 @@ export default function SchedulePickupPage() {
                       rows={3}
                       value={formData.address}
                       onChange={(e) => setFormData({ ...formData, address: e.target.value })}
-                      className="w-full px-4 py-3 border-2 border-neutral-200 rounded-xl focus:border-primary-500 focus:outline-none"
+                      className="w-full px-4 py-3 border-2 border-neutral-200 rounded-xl focus:border-primary-500 focus:outline-none text-gray-900 bg-white"
                       placeholder="123 Green Street, Sector 18, Delhi"
                     />
                   </div>
@@ -140,7 +159,7 @@ export default function SchedulePickupPage() {
                       required
                       value={formData.deviceType}
                       onChange={(e) => setFormData({ ...formData, deviceType: e.target.value })}
-                      className="w-full px-4 py-3 border-2 border-neutral-200 rounded-xl focus:border-primary-500 focus:outline-none"
+                      className="w-full px-4 py-3 border-2 border-neutral-200 rounded-xl focus:border-primary-500 focus:outline-none text-gray-900 bg-white"
                     >
                       <option value="">Select device type</option>
                       <option value="mobile">Mobile Phone</option>
@@ -159,7 +178,7 @@ export default function SchedulePickupPage() {
                       required
                       value={formData.quantity}
                       onChange={(e) => setFormData({ ...formData, quantity: e.target.value })}
-                      className="w-full px-4 py-3 border-2 border-neutral-200 rounded-xl focus:border-primary-500 focus:outline-none"
+                      className="w-full px-4 py-3 border-2 border-neutral-200 rounded-xl focus:border-primary-500 focus:outline-none text-gray-900 bg-white"
                       placeholder="e.g., 2 laptops or 5kg"
                     />
                   </div>
@@ -178,7 +197,7 @@ export default function SchedulePickupPage() {
                       required
                       value={formData.date}
                       onChange={(e) => setFormData({ ...formData, date: e.target.value })}
-                      className="w-full px-4 py-3 border-2 border-neutral-200 rounded-xl focus:border-primary-500 focus:outline-none"
+                      className="w-full px-4 py-3 border-2 border-neutral-200 rounded-xl focus:border-primary-500 focus:outline-none text-gray-900 bg-white"
                     />
                   </div>
                   <div>
@@ -190,7 +209,7 @@ export default function SchedulePickupPage() {
                       required
                       value={formData.time}
                       onChange={(e) => setFormData({ ...formData, time: e.target.value })}
-                      className="w-full px-4 py-3 border-2 border-neutral-200 rounded-xl focus:border-primary-500 focus:outline-none"
+                      className="w-full px-4 py-3 border-2 border-neutral-200 rounded-xl focus:border-primary-500 focus:outline-none text-gray-900 bg-white"
                     >
                       <option value="">Select time slot</option>
                       <option value="9-12">9:00 AM - 12:00 PM</option>
@@ -243,9 +262,20 @@ export default function SchedulePickupPage() {
             <p className="text-lg text-neutral-600 mb-2">
               Your tracking ID: <span className="font-bold text-primary-600">EWL-2026-001234</span>
             </p>
-            <p className="text-neutral-600 mb-8">
+            <p className="text-neutral-600 mb-4">
               We&apos;ve sent a confirmation to your phone. The recycler will contact you soon.
             </p>
+            <motion.div
+              initial={{ opacity: 0, y: 10 }}
+              animate={{ opacity: 1, y: 0 }}
+              transition={{ delay: 0.5 }}
+              className="bg-gradient-to-r from-yellow-50 to-orange-50 border-2 border-orange-200 rounded-xl p-4 mb-8"
+            >
+              <p className="text-orange-800 font-semibold flex items-center justify-center gap-2">
+                <span className="text-2xl">🎁</span>
+                You&apos;ve earned a scratch card! Check your rewards page.
+              </p>
+            </motion.div>
             <div className="flex gap-4 justify-center">
               <Link href="/recyclers">
                 <motion.button

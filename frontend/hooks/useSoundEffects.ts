@@ -91,5 +91,35 @@ export const useSoundEffects = () => {
     oscillator.stop(audioContext.currentTime + 0.03);
   }, []);
 
-  return { playClick, playSuccess, playHover, playTick };
+  const playScratch = useCallback(() => {
+    // Scratching sound - white noise burst
+    const audioContext = new (window.AudioContext || (window as any).webkitAudioContext)();
+    const bufferSize = audioContext.sampleRate * 0.05; // 50ms
+    const buffer = audioContext.createBuffer(1, bufferSize, audioContext.sampleRate);
+    const data = buffer.getChannelData(0);
+
+    // Generate white noise
+    for (let i = 0; i < bufferSize; i++) {
+      data[i] = Math.random() * 2 - 1;
+    }
+
+    const source = audioContext.createBufferSource();
+    const gainNode = audioContext.createGain();
+    const filter = audioContext.createBiquadFilter();
+
+    source.buffer = buffer;
+    filter.type = 'highpass';
+    filter.frequency.value = 2000;
+
+    source.connect(filter);
+    filter.connect(gainNode);
+    gainNode.connect(audioContext.destination);
+
+    gainNode.gain.setValueAtTime(0.1, audioContext.currentTime);
+    gainNode.gain.exponentialRampToValueAtTime(0.01, audioContext.currentTime + 0.05);
+
+    source.start(audioContext.currentTime);
+  }, []);
+
+  return { playClick, playSuccess, playHover, playTick, playScratch };
 };
