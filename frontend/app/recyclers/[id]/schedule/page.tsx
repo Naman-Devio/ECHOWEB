@@ -22,7 +22,7 @@ export default function SchedulePickupPage() {
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
     playSuccess();
-    
+
     // Create a scratch card with fixed demo reward (50 points)
     try {
       // Store demo card in localStorage with fixed reward
@@ -40,7 +40,7 @@ export default function SchedulePickupPage() {
     } catch (error) {
       console.error('Error creating scratch card:', error);
     }
-    
+
     setStep(4); // Success step
   };
 

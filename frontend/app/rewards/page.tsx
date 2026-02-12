@@ -2,18 +2,14 @@
 
 import { useEffect, useState } from 'react';
 import { motion } from 'framer-motion';
-import {
-  Coins,
-  Gift,
-  TrendingUp,
-  History,
-  ShoppingBag,
-  Sparkles,
-  Award,
-  Flame,
-} from 'lucide-react';
+import { Coins, Gift, TrendingUp, History, ShoppingBag, Sparkles, Flame } from 'lucide-react';
 import ScratchCard from '@/components/ScratchCard';
 import { useSoundEffects } from '@/hooks/useSoundEffects';
+
+interface ScratchCard {
+  id: string;
+  status: string;
+}
 
 interface RewardCard {
   id: string;
@@ -98,11 +94,13 @@ export default function RewardsPage() {
   const fetchAvailableCards = async () => {
     try {
       const token = localStorage.getItem('accessToken');
-      
+
       // Get cards from localStorage (for non-logged-in users)
       const localCards = JSON.parse(localStorage.getItem('scratchCards') || '[]');
-      const availableLocalCards = localCards.filter((card: any) => card.status === 'AVAILABLE');
-      
+      const availableLocalCards = localCards.filter(
+        (card: ScratchCard) => card.status === 'AVAILABLE'
+      );
+
       if (!token) {
         setCards(availableLocalCards);
         return;
@@ -123,28 +121,28 @@ export default function RewardsPage() {
       console.error('Error fetching cards:', error);
       // Fallback to localStorage
       const localCards = JSON.parse(localStorage.getItem('scratchCards') || '[]');
-      setCards(localCards.filter((card: any) => card.status === 'AVAILABLE'));
+      setCards(localCards.filter((card: ScratchCard) => card.status === 'AVAILABLE'));
     }
   };
 
   const handleCardScratched = (reward: { type: string; value: number }) => {
     playSuccess();
-    
+
     // Update local summary immediately
     if (reward.type === 'POINTS') {
-      setSummary(prev => ({
+      setSummary((prev) => ({
         ...prev,
         rewardPoints: prev.rewardPoints + reward.value,
-        totalEarned: prev.totalEarned + (reward.value * 0.1),
+        totalEarned: prev.totalEarned + reward.value * 0.1,
       }));
     } else if (reward.type === 'CASHBACK') {
-      setSummary(prev => ({
+      setSummary((prev) => ({
         ...prev,
         cashbackBalance: prev.cashbackBalance + reward.value,
         totalEarned: prev.totalEarned + reward.value,
       }));
     }
-    
+
     // Refresh data from server/localStorage
     fetchRewardsSummary();
     fetchAvailableCards();
@@ -159,29 +157,29 @@ export default function RewardsPage() {
     const guestUser = localStorage.getItem('guestUser');
     if (guestUser) {
       const guest = JSON.parse(guestUser);
-      
+
       // Deduct points
       guest.points = (guest.points || 0) - redeemAmount;
-      
+
       // Add cashback (100 points = ₹10)
       const cashbackToAdd = redeemAmount * 0.1;
       guest.cashback = (guest.cashback || 0) + cashbackToAdd;
-      
+
       localStorage.setItem('guestUser', JSON.stringify(guest));
-      
+
       playSuccess();
       alert(`Success! Converted ${redeemAmount} points to ₹${cashbackToAdd.toFixed(2)} cashback!`);
-      
+
       // Update UI
-      setSummary(prev => ({
+      setSummary((prev) => ({
         ...prev,
         rewardPoints: guest.points,
         cashbackBalance: guest.cashback,
       }));
-      
+
       // Dispatch event to update PointsBadge
       window.dispatchEvent(new Event('rewardUpdated'));
-      
+
       setSelectedVoucher('');
       setRedeemAmount(100);
       return;
@@ -320,9 +318,7 @@ export default function RewardsPage() {
 
           <div className="grid md:grid-cols-2 gap-8">
             <div>
-              <label className="block text-sm font-medium text-gray-700 mb-2">
-                Select Voucher
-              </label>
+              <label className="block text-sm font-medium text-gray-700 mb-2">Select Voucher</label>
               <div className="grid grid-cols-2 gap-3">
                 {voucherOptions.map((option) => (
                   <button
@@ -363,12 +359,16 @@ export default function RewardsPage() {
                 </div>
                 <div className="flex justify-between">
                   <span className="text-gray-600">Voucher Value:</span>
-                  <span className="font-bold text-green-600">₹{(redeemAmount * 0.1).toFixed(2)}</span>
+                  <span className="font-bold text-green-600">
+                    ₹{(redeemAmount * 0.1).toFixed(2)}
+                  </span>
                 </div>
               </div>
               <button
                 onClick={handleRedeem}
-                disabled={!selectedVoucher || redeemAmount < 100 || summary.rewardPoints < redeemAmount}
+                disabled={
+                  !selectedVoucher || redeemAmount < 100 || summary.rewardPoints < redeemAmount
+                }
                 className={`w-full mt-4 px-6 py-3 rounded-xl font-semibold transition-all ${
                   !selectedVoucher || redeemAmount < 100 || summary.rewardPoints < redeemAmount
                     ? 'bg-gray-300 text-gray-500 cursor-not-allowed'
@@ -404,9 +404,7 @@ export default function RewardsPage() {
                   </div>
                 </div>
                 <div
-                  className={`font-bold ${
-                    tx.pointsAmount > 0 ? 'text-green-600' : 'text-red-600'
-                  }`}
+                  className={`font-bold ${tx.pointsAmount > 0 ? 'text-green-600' : 'text-red-600'}`}
                 >
                   {tx.pointsAmount > 0 ? '+' : ''}
                   {tx.pointsAmount} pts

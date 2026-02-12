@@ -15,7 +15,7 @@ export default function DebugRewardsPage() {
   const loadData = () => {
     const guest = localStorage.getItem('guestUser');
     const cards = localStorage.getItem('scratchCards');
-    
+
     setGuestUser(guest ? JSON.parse(guest) : null);
     setScratchCards(cards ? JSON.parse(cards) : []);
   };
@@ -30,7 +30,7 @@ export default function DebugRewardsPage() {
     <div className="min-h-screen bg-gray-100 pt-24 p-8">
       <div className="max-w-4xl mx-auto">
         <h1 className="text-3xl font-bold mb-6">Debug Rewards System</h1>
-        
+
         <button
           onClick={clearData}
           className="mb-6 px-4 py-2 bg-red-500 text-white rounded hover:bg-red-600"

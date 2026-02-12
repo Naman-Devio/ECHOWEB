@@ -89,7 +89,10 @@ export default function ImpactStatsCounter({
   const isVisible = useInView(sectionRef, { amount: 0.3 }); // Only play sounds when 30% of section is visible
 
   return (
-    <section ref={sectionRef} className="py-20 bg-gradient-to-br from-neutral-900 via-primary-900 to-secondary-900 text-white relative overflow-hidden">
+    <section
+      ref={sectionRef}
+      className="py-20 bg-gradient-to-br from-neutral-900 via-primary-900 to-secondary-900 text-white relative overflow-hidden"
+    >
       {/* Background pattern */}
       <div className="absolute inset-0 opacity-10">
         <div
@@ -134,7 +137,11 @@ export default function ImpactStatsCounter({
               <TrendingUp className="w-6 h-6 text-green-400" />
             </div>
             <div className="text-5xl font-bold mb-2">
-              <AnimatedCounter value={Math.floor(eWasteDiverted / 1000)} playTick={playTick} isVisible={isVisible} />
+              <AnimatedCounter
+                value={Math.floor(eWasteDiverted / 1000)}
+                playTick={playTick}
+                isVisible={isVisible}
+              />
               <span className="text-3xl ml-1">Tons</span>
             </div>
             <p className="text-neutral-300 text-lg">E-Waste Diverted from Landfills</p>
@@ -161,7 +168,11 @@ export default function ImpactStatsCounter({
               <TrendingUp className="w-6 h-6 text-green-400" />
             </div>
             <div className="text-5xl font-bold mb-2">
-              <AnimatedCounter value={Math.floor(co2Saved / 1000)} playTick={playTick} isVisible={isVisible} />
+              <AnimatedCounter
+                value={Math.floor(co2Saved / 1000)}
+                playTick={playTick}
+                isVisible={isVisible}
+              />
               <span className="text-3xl ml-1">Tons</span>
             </div>
             <p className="text-neutral-300 text-lg">CO₂ Emissions Prevented</p>
@@ -188,7 +199,11 @@ export default function ImpactStatsCounter({
               <TrendingUp className="w-6 h-6 text-green-400" />
             </div>
             <div className="text-5xl font-bold mb-2">
-              <AnimatedCounter value={Math.floor(totalMaterials)} playTick={playTick} isVisible={isVisible} />
+              <AnimatedCounter
+                value={Math.floor(totalMaterials)}
+                playTick={playTick}
+                isVisible={isVisible}
+              />
               <span className="text-3xl ml-1">Kg</span>
             </div>
             <p className="text-neutral-300 text-lg">Precious Materials Recovered</p>

@@ -16,12 +16,12 @@ export default function Navbar() {
 
   useEffect(() => {
     checkAuthStatus();
-    
+
     // Listen for auth changes
     const handleAuthChange = () => checkAuthStatus();
     window.addEventListener('storage', handleAuthChange);
     window.addEventListener('rewardUpdated', handleAuthChange);
-    
+
     return () => {
       window.removeEventListener('storage', handleAuthChange);
       window.removeEventListener('rewardUpdated', handleAuthChange);
@@ -31,7 +31,7 @@ export default function Navbar() {
   const checkAuthStatus = () => {
     const token = localStorage.getItem('accessToken');
     const guestUser = localStorage.getItem('guestUser');
-    
+
     if (token) {
       setIsLoggedIn(true);
       // Try to get user name from token or localStorage
@@ -58,10 +58,10 @@ export default function Navbar() {
     setIsLoggedIn(false);
     setUserName('');
     setShowUserMenu(false);
-    
+
     // Dispatch event to notify PointsBadge
     window.dispatchEvent(new Event('userLoggedOut'));
-    
+
     window.location.href = '/';
   };
 
@@ -76,7 +76,7 @@ export default function Navbar() {
     <nav className="fixed top-0 left-0 right-0 z-50 bg-white/80 backdrop-blur-md border-b border-neutral-200 shadow-sm">
       {/* Points Badge - always show */}
       <PointsBadge />
-      
+
       <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
         <div className="flex justify-between items-center h-16">
           {/* Logo */}

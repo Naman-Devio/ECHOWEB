@@ -33,7 +33,7 @@ export default function SignInPage() {
           router.push('/');
         }, 1500);
       }
-    } catch (err: unknown) {
+    } catch {
       // If login fails, create a dummy guest account
       playSuccess();
       const guestId = `guest_${Date.now()}`;
@@ -45,11 +45,11 @@ export default function SignInPage() {
         points: 100,
         isGuest: true,
       };
-      
+
       // Store guest data in localStorage
       localStorage.setItem('guestUser', JSON.stringify(guestData));
       localStorage.setItem('accessToken', `guest_token_${guestId}`);
-      
+
       setSuccess('Welcome! Created a guest account for you. Redirecting...');
       setTimeout(() => {
         router.push('/');

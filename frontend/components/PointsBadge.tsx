@@ -5,62 +5,29 @@ import { motion, AnimatePresence } from 'framer-motion';
 import { Coins, Gift } from 'lucide-react';
 import Link from 'next/link';
 
+interface ScratchCard {
+  id: string;
+  status: string;
+}
+
 export default function PointsBadge() {
   const [points, setPoints] = useState(0);
   const [cashback, setCashback] = useState(0);
   const [availableCards, setAvailableCards] = useState(0);
   const [showTooltip, setShowTooltip] = useState(false);
-  const [userTier, setUserTier] = useState('BRONZE');
-
-  useEffect(() => {
-    fetchRewardsSummary();
-    
-    // Refresh every 5 seconds for better responsiveness
-    const interval = setInterval(fetchRewardsSummary, 5000);
-    
-    // Listen for storage events (when localStorage changes in another tab/component)
-    const handleStorageChange = () => {
-      console.log('Storage changed, refreshing points badge');
-      fetchRewardsSummary();
-    };
-    window.addEventListener('storage', handleStorageChange);
-    
-    // Also listen for custom event when scratch card is scratched
-    const handleRewardUpdate = () => {
-      console.log('Reward updated, refreshing points badge');
-      fetchRewardsSummary();
-    };
-    window.addEventListener('rewardUpdated', handleRewardUpdate);
-    
-    // Listen for logout event
-    const handleLogout = () => {
-      console.log('User logged out, clearing badge');
-      setPoints(0);
-      setCashback(0);
-      setAvailableCards(0);
-      setUserTier('MVP');
-    };
-    window.addEventListener('userLoggedOut', handleLogout);
-    
-    return () => {
-      clearInterval(interval);
-      window.removeEventListener('storage', handleStorageChange);
-      window.removeEventListener('rewardUpdated', handleRewardUpdate);
-      window.removeEventListener('userLoggedOut', handleLogout);
-    };
-  }, []);
 
   const getTierInfo = (points: number) => {
     if (points >= 5000) return { name: 'GOLD', color: 'from-yellow-400 to-yellow-600', icon: '👑' };
     if (points >= 2000) return { name: 'SILVER', color: 'from-gray-300 to-gray-500', icon: '⭐' };
-    if (points >= 500) return { name: 'BRONZE', color: 'from-orange-400 to-orange-600', icon: '🥉' };
+    if (points >= 500)
+      return { name: 'BRONZE', color: 'from-orange-400 to-orange-600', icon: '🥉' };
     return { name: 'MVP', color: 'from-green-400 to-green-600', icon: '🌱' };
   };
 
   const fetchRewardsSummary = async () => {
     try {
       const token = localStorage.getItem('accessToken');
-      
+
       // Check if user just logged out - don't auto-create guest user
       const justLoggedOut = localStorage.getItem('justLoggedOut');
       if (justLoggedOut) {
@@ -69,10 +36,9 @@ export default function PointsBadge() {
         setPoints(0);
         setCashback(0);
         setAvailableCards(0);
-        setUserTier('MVP');
         return;
       }
-      
+
       // Check for guest user
       let guestUser = localStorage.getItem('guestUser');
       if (!guestUser && !token) {
@@ -85,30 +51,28 @@ export default function PointsBadge() {
           tier: 'MVP',
           points: 0,
           cashback: 0,
-          isGuest: true
+          isGuest: true,
         };
         localStorage.setItem('guestUser', JSON.stringify(newGuest));
         guestUser = JSON.stringify(newGuest);
       }
-      
+
       if (guestUser) {
         const guest = JSON.parse(guestUser);
         setPoints(guest.points || 0);
         setCashback(guest.cashback || 0);
-        setUserTier(guest.tier || 'MVP');
-        
+
         // Count localStorage cards
         const localCards = JSON.parse(localStorage.getItem('scratchCards') || '[]');
-        setAvailableCards(localCards.filter((c: any) => c.status === 'AVAILABLE').length);
+        setAvailableCards(localCards.filter((c: ScratchCard) => c.status === 'AVAILABLE').length);
         return;
       }
-      
+
       // Show badge even without login, just with 0 values
       if (!token) {
         setPoints(0);
         setCashback(0);
         setAvailableCards(0);
-        setUserTier('MVP');
         return;
       }
 
@@ -123,12 +87,49 @@ export default function PointsBadge() {
         setPoints(data.rewardPoints);
         setCashback(data.cashbackBalance);
         setAvailableCards(data.availableCards);
-        setUserTier(getTierInfo(data.rewardPoints).name);
       }
     } catch (error) {
       console.error('Error fetching rewards:', error);
     }
   };
+
+  useEffect(() => {
+    fetchRewardsSummary();
+
+    // Refresh every 5 seconds for better responsiveness
+    const interval = setInterval(fetchRewardsSummary, 5000);
+
+    // Listen for storage events (when localStorage changes in another tab/component)
+    const handleStorageChange = () => {
+      console.log('Storage changed, refreshing points badge');
+      fetchRewardsSummary();
+    };
+    window.addEventListener('storage', handleStorageChange);
+
+    // Also listen for custom event when scratch card is scratched
+    const handleRewardUpdate = () => {
+      console.log('Reward updated, refreshing points badge');
+      fetchRewardsSummary();
+    };
+    window.addEventListener('rewardUpdated', handleRewardUpdate);
+
+    // Listen for logout event
+    const handleLogout = () => {
+      console.log('User logged out, clearing badge');
+      setPoints(0);
+      setCashback(0);
+      setAvailableCards(0);
+    };
+    window.addEventListener('userLoggedOut', handleLogout);
+
+    return () => {
+      clearInterval(interval);
+      window.removeEventListener('storage', handleStorageChange);
+      window.removeEventListener('rewardUpdated', handleRewardUpdate);
+      window.removeEventListener('userLoggedOut', handleLogout);
+    };
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, []);
 
   const tierInfo = getTierInfo(points);
 

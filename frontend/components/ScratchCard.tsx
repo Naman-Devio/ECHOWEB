@@ -26,7 +26,7 @@ export default function ScratchCard({ cardId, onScratched }: ScratchCardProps) {
       console.log('Loading reward for card:', cardId);
       // Check if this is a localStorage card
       const isLocalCard = cardId.length === 13;
-      
+
       if (isLocalCard) {
         const localCards = JSON.parse(localStorage.getItem('scratchCards') || '[]');
         console.log('Local cards:', localCards);
@@ -39,7 +39,7 @@ export default function ScratchCard({ cardId, onScratched }: ScratchCardProps) {
         }
       }
     };
-    
+
     loadReward();
   }, [cardId]);
 
@@ -112,7 +112,7 @@ export default function ScratchCard({ cardId, onScratched }: ScratchCardProps) {
       console.error('No reward data available!');
       return; // Safety check
     }
-    
+
     setIsRevealed(true);
     playSuccess();
 
@@ -150,12 +150,12 @@ export default function ScratchCard({ cardId, onScratched }: ScratchCardProps) {
           tier: 'BRONZE',
           points: 0,
           cashback: 0,
-          isGuest: true
+          isGuest: true,
         };
         localStorage.setItem('guestUser', JSON.stringify(newGuest));
         guestUser = JSON.stringify(newGuest);
       }
-      
+
       if (guestUser) {
         const guest = JSON.parse(guestUser);
         console.log('Current guest user:', guest);
@@ -168,7 +168,7 @@ export default function ScratchCard({ cardId, onScratched }: ScratchCardProps) {
         }
         localStorage.setItem('guestUser', JSON.stringify(guest));
         console.log('Guest user updated:', guest);
-        
+
         // Dispatch custom event to notify other components
         window.dispatchEvent(new Event('rewardUpdated'));
       }
@@ -240,11 +240,7 @@ export default function ScratchCard({ cardId, onScratched }: ScratchCardProps) {
           ) : (
             <AnimatePresence>
               {isRevealed && (
-                <motion.div
-                  initial={{ scale: 0 }}
-                  animate={{ scale: 1 }}
-                  className="text-center"
-                >
+                <motion.div initial={{ scale: 0 }} animate={{ scale: 1 }} className="text-center">
                   <motion.div
                     animate={{ rotate: [0, 10, -10, 0] }}
                     transition={{ repeat: Infinity, duration: 2 }}
@@ -261,9 +257,7 @@ export default function ScratchCard({ cardId, onScratched }: ScratchCardProps) {
                   <div className="text-xl text-white font-semibold">
                     {reward.type === 'CASHBACK' ? 'Cashback!' : 'Points!'}
                   </div>
-                  <div className="text-sm text-white/80 mt-2">
-                    Demo reward added
-                  </div>
+                  <div className="text-sm text-white/80 mt-2">Demo reward added</div>
                 </motion.div>
               )}
             </AnimatePresence>
