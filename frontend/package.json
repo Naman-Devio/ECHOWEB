@@ -1,6 +1,25 @@
 {
-  "name": "frontend",
-  "version": "0.1.0",
+  "name": "echoweb-frontend",
+  "version": "1.0.0",
+  "description": "Frontend for ECHOWEB - Sustainable E-Waste Management Platform",
+  "author": "Naman (CodeWithNaman) <echoofficial761@outlook.com>",
+  "license": "MIT",
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/Naman-Devio/ECHOWEB.git"
+  },
+  "bugs": {
+    "url": "https://github.com/Naman-Devio/ECHOWEB/issues"
+  },
+  "homepage": "https://github.com/Naman-Devio/ECHOWEB#readme",
+  "keywords": [
+    "e-waste",
+    "recycling",
+    "nextjs",
+    "react",
+    "typescript",
+    "tailwindcss"
+  ],
   "private": true,
   "scripts": {
     "dev": "next dev",

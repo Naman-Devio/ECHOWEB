@@ -1,8 +1,16 @@
 {
-  "name": "backend",
+  "name": "echoweb-backend",
   "version": "1.0.0",
-  "description": "",
-  "main": "index.js",
+  "description": "Backend API for ECHOWEB - Sustainable E-Waste Management Platform",
+  "main": "dist/index.js",
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/Naman-Devio/ECHOWEB.git"
+  },
+  "bugs": {
+    "url": "https://github.com/Naman-Devio/ECHOWEB/issues"
+  },
+  "homepage": "https://github.com/Naman-Devio/ECHOWEB#readme",
   "scripts": {
     "dev": "nodemon src/index.ts",
     "build": "npx prisma generate && npx prisma migrate deploy && tsc",
@@ -15,9 +23,18 @@
   "prisma": {
     "seed": "ts-node prisma/seed.ts"
   },
-  "keywords": [],
-  "author": "",
-  "license": "ISC",
+  "keywords": [
+    "e-waste",
+    "recycling",
+    "sustainability",
+    "environment",
+    "express",
+    "typescript",
+    "prisma",
+    "postgresql"
+  ],
+  "author": "Naman (CodeWithNaman) <echoofficial761@outlook.com>",
+  "license": "MIT",
   "type": "commonjs",
   "dependencies": {
     "@prisma/adapter-pg": "^7.4.0",
