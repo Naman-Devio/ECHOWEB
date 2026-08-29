@@ -102,12 +102,12 @@
 
 <table>
 <tr>
-<td><img src="https://via.placeholder.com/400x250/10B981/ffffff?text=Home+Page" alt="Home" /></td>
-<td><img src="https://via.placeholder.com/400x250/3B82F6/ffffff?text=Recycler+Search" alt="Search" /></td>
+<td><img src="https://h.uguu.se/DCuoWnqv.jpg" alt="Home Page" /></td>
+<td><img src="https://h.uguu.se/jDGaMkQc.jpg" alt="Recycler Search" /></td>
 </tr>
 <tr>
-<td><img src="https://via.placeholder.com/400x250/F59E0B/ffffff?text=Pickup+Booking" alt="Booking" /></td>
-<td><img src="https://via.placeholder.com/400x250/8B5CF6/ffffff?text=Impact+Dashboard" alt="Dashboard" /></td>
+<td><img src="https://d.uguu.se/ycDAuADY.jpg" alt="Rewards" /></td>
+<td><img src="https://d.uguu.se/mmjPOwpr.jpg" alt="Impact Dashboard" /></td>
 </tr>
 </table>
 
