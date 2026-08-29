@@ -1,7 +1,7 @@
 [build]
   # Build the frontend (Next.js) and backend (TypeScript compile)
   command = "npm run build"
-  publish = ".next"
+  publish = "frontend/.next"
   functions = "netlify/functions"
 
 [build.environment]
