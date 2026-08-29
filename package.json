@@ -5,7 +5,7 @@
   "private": true,
   "scripts": {
     "build": "npm run build:backend && npm run build:frontend",
-    "build:backend": "cd backend && npm install && npx prisma generate && tsc",
+    "build:backend": "cd backend && npm install && npx prisma generate && npx tsc",
     "build:frontend": "cd frontend && npm install && npm install @netlify/plugin-nextjs && npm run build",
     "dev:frontend": "cd frontend && npm run dev",
     "dev:backend": "cd backend && npm run dev",
