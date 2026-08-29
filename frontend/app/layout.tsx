@@ -1,7 +1,11 @@
 import type { Metadata } from 'next';
 import localFont from 'next/font/local';
 import './globals.css';
-import Navbar from '@/components/Navbar';
+import dynamicImport from 'next/dynamic';
+
+const Navbar = dynamicImport(() => import('@/components/Navbar'), { ssr: false });
+
+export const dynamic = 'force-dynamic';
 
 const geistSans = localFont({
   src: './fonts/GeistVF.woff',

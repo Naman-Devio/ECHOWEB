@@ -2,8 +2,13 @@
 
 import { useCallback } from 'react';
 
+const isBrowser = typeof window !== 'undefined';
+
+const noop = () => {};
+
 export const useSoundEffects = () => {
   const playClick = useCallback(() => {
+    if (!isBrowser) return;
     // Create a pleasant click sound using Web Audio API
     const audioContext = new (window.AudioContext || (window as any).webkitAudioContext)();
     const oscillator = audioContext.createOscillator();
@@ -23,6 +28,7 @@ export const useSoundEffects = () => {
   }, []);
 
   const playSuccess = useCallback(() => {
+    if (!isBrowser) return;
     const audioContext = new (window.AudioContext || (window as any).webkitAudioContext)();
     const oscillator = audioContext.createOscillator();
     const gainNode = audioContext.createGain();
@@ -55,6 +61,7 @@ export const useSoundEffects = () => {
   }, []);
 
   const playHover = useCallback(() => {
+    if (!isBrowser) return;
     const audioContext = new (window.AudioContext || (window as any).webkitAudioContext)();
     const oscillator = audioContext.createOscillator();
     const gainNode = audioContext.createGain();
@@ -73,6 +80,7 @@ export const useSoundEffects = () => {
   }, []);
 
   const playTick = useCallback(() => {
+    if (!isBrowser) return;
     // Counter tick sound - short, high-pitched beep
     const audioContext = new (window.AudioContext || (window as any).webkitAudioContext)();
     const oscillator = audioContext.createOscillator();
@@ -92,6 +100,7 @@ export const useSoundEffects = () => {
   }, []);
 
   const playScratch = useCallback(() => {
+    if (!isBrowser) return;
     // Scratching sound - white noise burst
     const audioContext = new (window.AudioContext || (window as any).webkitAudioContext)();
     const bufferSize = audioContext.sampleRate * 0.05; // 50ms
